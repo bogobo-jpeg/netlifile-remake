@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request, UploadFile, File
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import os
@@ -32,6 +32,22 @@ async def get_files():
         return {"files": fileslist}
     except FileNotFoundError:
         return {"error": "storage folder not found"}
+    
+from fastapi.responses import FileResponse
+
+STORAGE_DIR = "storage"
+
+@app.get("/download/{filename}")
+async def download_file(filename: str):
+    file_path = os.path.join(STORAGE_DIR, filename)
+    if os.path.isfile(file_path):
+        return FileResponse(
+            path=file_path,
+            filename=filename,
+            media_type='application/octet-stream'
+        )
+    return {"error": "File not found"}
+
     
 @app.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
