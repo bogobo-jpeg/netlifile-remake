@@ -1,19 +1,24 @@
 function renderfiles(datalist) {
     const fileList = document.getElementById("List");
-    fileList.innerHTML = ""; // Clear previous results
+    fileList.innerHTML = ""; // Clear previous entries
+
     for (let i = 0; i < datalist.length; i++) {
-        const filename = datalist[i];
+        const fileName = datalist[i];
+
         const fileItem = document.createElement('div');
         fileItem.className = 'file';
         fileItem.innerHTML = `
             <div>
-                <strong>${filename}</strong>
+                <strong>${fileName}</strong>
             </div>
-            <a href="/storage/${filename}" download="${filename}" target="_blank" style="color:white;">Download</a>
+            <a href="/download/${encodeURIComponent(fileName)}" download="${fileName}" target="_blank" style="color:white;">
+                Download
+            </a>
         `;
         fileList.appendChild(fileItem);
     }
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
     const button = document.getElementById("get-data-btn");
